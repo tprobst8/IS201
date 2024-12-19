@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Dodge Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            background: linear-gradient(#555, #222);
+        }
+        #instructions {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        #restart {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="instructions">Use Left and Right Arrow Keys to Move the Car. Avoid Obstacles!</div>
+<button id="restart">Restart Game</button>
+<canvas id="gameCanvas"></canvas>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const restartBtn = document.getElementById("restart");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const laneCount = 6;
+    const laneWidth = canvas.width / laneCount;
+    const carWidth = laneWidth * 0.6;
+    const carHeight = 100;
+    let carX = Math.floor(laneCount / 2) * laneWidth + laneWidth / 2 - carWidth / 2;
+    const carY = canvas.height - carHeight - 20;
+    let carSpeed = laneWidth;
+
+    let obstacles = [];
+    const obstacleWidth = laneWidth * 0.6;
+    const obstacleHeight = 100;
+    let obstacleSpeed = 5;
+    let backgroundOffset = 0;
+    let score = 0;
+    let gameOver = false;
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" && carX > laneWidth / 2) carX -= carSpeed;
+        if (e.key === "ArrowRight" && carX < canvas.width - laneWidth / 2 - carWidth) carX += carSpeed;
+    });
+
+    function createObstacle() {
+        const laneIndex = Math.floor(Math.random() * laneCount);
+        const x = laneIndex * laneWidth + laneWidth / 2 - obstacleWidth / 2;
+        obstacles.push({ x, y: -obstacleHeight });
+    }
+
+    function drawRoadLines() {
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 5;
+        ctx.setLineDash([40, 40]);
+        for (let i = 1; i < laneCount; i++) {
+            const laneX = i * laneWidth;
+            ctx.beginPath();
+            ctx.moveTo(laneX, -canvas.height + backgroundOffset);
+            ctx.lineTo(laneX, canvas.height + backgroundOffset);
+            ctx.stroke();
+        }
+    }
+
+    function drawCar(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, carWidth, carHeight);
+        ctx.fillStyle = "black";
+        ctx.fillRect(x + 10, y + 10, carWidth - 20, carHeight - 40); // Body detail
+        ctx.fillStyle = "gray";
+        ctx.fillRect(x + 5, y + 75, 15, 15); // Left wheel
+        ctx.fillRect(x + carWidth - 20, y + 75, 15, 15); // Right wheel
+    }
+
+    function update() {
+        if (gameOver) return;
+
+        backgroundOffset += obstacleSpeed;
+        if (backgroundOffset >= canvas.height) backgroundOffset = 0;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawRoadLines();
+
+        drawCar(carX, carY, "red");
+
+        obstacles.forEach((obstacle, index) => {
+            obstacle.y += obstacleSpeed;
+            drawCar(obstacle.x, obstacle.y, "blue");
+
+            if (
+                carX < obstacle.x + obstacleWidth &&
+                carX + carWidth > obstacle.x &&
+                carY < obstacle.y + obstacleHeight &&
+                carY + carHeight > obstacle.y
+            ) {
+                gameOver = true;
+                restartBtn.style.display = "block";
+                alert(`Game Over! Score: ${score}`);
+            }
+
+            if (obstacle.y > canvas.height) {
+                obstacles.splice(index, 1);
+                score++;
+                if (score % 5 === 0) obstacleSpeed += 1;
+            }
+        });
+
+        if (!gameOver) requestAnimationFrame(update);
+    }
+
+    setInterval(createObstacle, 1000);
+    update();
+
+    restartBtn.addEventListener("click", () => {
+        gameOver = false;
+        carX = Math.floor(laneCount / 2) * laneWidth + laneWidth / 2 - carWidth / 2;
+        obstacles = [];
+        score = 0;
+        obstacleSpeed = 5;
+        restartBtn.style.display = "none";
+        update();
+    });
+</script>
+</body>
+</html>
