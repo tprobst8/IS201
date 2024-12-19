@@ -9,12 +9,12 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #4d4c4c;
-    color: #333;
+    color: #333; /* Dark gray text */
     line-height: 1.6;
     padding: 20px;
 }
 
-/*Navigation links*/
+/* Navigation Links */
 nav a, footer a {
     display: inline-block;
     text-align: center; 
@@ -34,8 +34,7 @@ nav a:hover, footer a:hover {
     transition: background-color 0.3s, color 0.3s;
 }
 
-
-/* Title Background Section (Replaces Header) */
+/* Header Title Background */
 .title-background {
     background-image: url('Pics/Car4.jpg');
     background-size: cover;
@@ -60,7 +59,7 @@ h1 {
     position: relative;
 }
 
-/* Section Styling */
+/* General Section Styling */
 main section {
     margin-bottom: 40px;
     padding: 20px;
@@ -75,13 +74,38 @@ h2 {
     color: #da980a;
 }
 
-/* General list styling */
+/* Styling for Divs */
+.story-container {
+    background-color: #f5f5f5;
+    color: #333; /* Dark gray text */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.features-container {
+    background-color: #eaeaea;
+    color: #333; /* Dark gray text */
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.gallery-container {
+    background-color: #f0f0f0;
+    color: #333; /* Dark gray text */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* General List Styling */
 ol, ul {
     margin: 0; 
     padding-left: 20px; 
 }
 
-/* Specific to the "About My Car" section */
+/* Specific to "About My Car" Section */
 #features {
     text-align: left;
 }
@@ -95,21 +119,8 @@ img {
     border-radius: 8px;
 }
 
-
 /* Video and Tableau Embeds */
 iframe {
     display: block;
     margin: 20px auto;
-    border: none;
-    border-radius: 8px;
-}
-
-/* Footer Styling */
-footer {
-    text-align: center;
-    padding: 10px;
-    margin-top: 20px;
-    background: #333;
-    color: white;
-    border-radius: 8px;
-}
+    b
